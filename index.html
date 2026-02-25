@@ -284,8 +284,8 @@ const LOGICAL_HEIGHT = 1920;
 /* RESOLUSI AMAN:
    - Mobile: 1.0 (lebih ringan)
    - Desktop/Laptop: 2.0 (lebih tajam, masih aman) */
-const SCALE = isMobile ? 1.0 : 2.0;
-
+const SCALE = isMobile ? 0.85 : 1.75;
+  
 canvas.width  = LOGICAL_WIDTH * SCALE;
 canvas.height = LOGICAL_HEIGHT * SCALE;
 ctx.scale(SCALE, SCALE);
