@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -10,19 +11,26 @@
       box-sizing: border-box;
     }
 
-    /* DM Serif Bold custom untuk judul */
+    /* FONT LOKAL DARI FOLDER */
     @font-face {
-      font-family: 'DMSerifCustomBold';
-      src: url('./fonts/DMSerifDisplay-Bold.ttf') format('truetype');
+      font-family: 'DMSerifDisplay';
+      src: url('fonts/Judul DMSerifDisplay-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'PlusJakartaSans';
+      src: url('fonts/Body PlusJakartaSans-Bold.ttf') format('truetype');
       font-weight: 700;
       font-style: normal;
       font-display: swap;
     }
 
-    /* Plus Jakarta Bold lokal */
     @font-face {
-      font-family: 'PlusJakartaCustom';
-      src: url('./fonts/PlusJakartaSans-Bold.woff2') format('woff2');
+      font-family: 'ProximaNova';
+      src: url('fonts/Kredit Proxima Nova Bold.ttf') format('truetype');
       font-weight: 700;
       font-style: normal;
       font-display: swap;
@@ -35,7 +43,7 @@
       gap: 16px;
       background: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
       color: #e5e7eb;
-      font-family: 'PlusJakartaCustom', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'PlusJakartaSans', system-ui, sans-serif;
     }
 
     .panel {
@@ -161,6 +169,17 @@
       background: #0f172a;
     }
 
+    .btn-mp4 {
+      background: linear-gradient(135deg, #ea580c, #dc2626);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(234,88,12,0.5);
+    }
+
+    .btn-mp4:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
     .status {
       margin-top: 8px;
       font-size: 12px;
@@ -172,8 +191,14 @@
       font-size: 13px;
     }
 
+    #download a {
+      display: block;
+      margin-bottom: 6px;
+      text-decoration: underline;
+    }
+
     canvas {
-      background: #ff00ff; /* MAGENTA preview */
+      background: #808080;
       border-radius: 18px;
       border: 1px solid #4b5563;
       box-shadow: 0 20px 40px rgba(0,0,0,0.8);
@@ -229,27 +254,27 @@
   <div class="panel left">
     <h2>Reels – Upper / Judul / Subjudul / Isi</h2>
     <small>
-      Judul: awalnya statis penuh (thumbnail aman), lalu hilang dan muncul lagi lewat wipe kiri→kanan (tanpa bar).<br>
-      Isi memakai [[highlight]] per baris dengan animasi cepat dan ringan.
+      Menggunakan font lokal dari folder medsosJP 2<br>
+      Judul: DM Serif | Body: Plus Jakarta | Upper: Proxima Nova
     </small>
 
     <div class="field">
-      <label for="upper">Upper</label>
-      <textarea id="upper" placeholder="Contoh: BREAKING NEWS / HEADLINE"></textarea>
+      <label for="upper">Upper (Proxima Nova)</label>
+      <textarea id="upper" placeholder="Contoh: Breaking News"></textarea>
     </div>
 
     <div class="field">
-      <label for="title">Judul</label>
+      <label for="title">Judul (DM Serif Display)</label>
       <textarea id="title" placeholder="Judul utama yang akan tampil besar di awal video"></textarea>
     </div>
 
     <div class="field">
-      <label for="subtitle">Subjudul</label>
+      <label for="subtitle">Subjudul (Plus Jakarta Sans)</label>
       <textarea id="subtitle" placeholder="Subjudul singkat sebagai pelengkap judul"></textarea>
     </div>
 
     <div class="field">
-      <label for="body">Isi</label>
+      <label for="body">Isi (Plus Jakarta Sans)</label>
       <textarea
         id="body"
         placeholder="Pisah halaman isi dengan satu baris kosong.&#10;Gunakan [[highlight]] untuk menandai frasa penting."
@@ -259,6 +284,7 @@
     <div class="btn-row">
       <button class="btn-secondary" id="previewBtn">👁️ Preview</button>
       <button class="btn-primary" id="renderBtn">🎬 Render (WEBM)</button>
+      <button class="btn-mp4" id="renderMp4Btn">🎬 Render (MP4)</button>
     </div>
     <div class="status" id="status">Status: idle</div>
     <div id="download"></div>
@@ -280,12 +306,8 @@ const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
 
 const LOGICAL_WIDTH = 1080;
 const LOGICAL_HEIGHT = 1920;
+const SCALE = isMobile ? 0.75 : 1.5;
 
-/* RESOLUSI AMAN:
-   - Mobile: 1.0 (lebih ringan)
-   - Desktop/Laptop: 2.0 (lebih tajam, masih aman) */
-const SCALE = isMobile ? 0.85 : 1.75;
-  
 canvas.width  = LOGICAL_WIDTH * SCALE;
 canvas.height = LOGICAL_HEIGHT * SCALE;
 ctx.scale(SCALE, SCALE);
@@ -297,6 +319,7 @@ const bodyEl = document.getElementById('body');
 
 const previewBtn = document.getElementById('previewBtn');
 const renderBtn = document.getElementById('renderBtn');
+const renderMp4Btn = document.getElementById('renderMp4Btn');
 const statusEl = document.getElementById('status');
 const downloadEl = document.getElementById('download');
 
@@ -306,6 +329,7 @@ let mediaRecorder = null;
 let recordedChunks = [];
 let animStart = null;
 let targetDuration = 12;
+let currentFormat = 'webm';
 
 let bodyPages = [];
 let pageDurations = [];
@@ -325,18 +349,23 @@ let titleCtx = null;
 let titleTextureReady = false;
 
 /* ============================================================
+   FONT CONFIG
+   ============================================================ */
+const FONT_UPPER = "700 34px 'ProximaNova', 'PlusJakartaSans', sans-serif";
+const FONT_TITLE = "400 90px 'DMSerifDisplay', serif";
+const FONT_SUBTITLE = "700 34px 'PlusJakartaSans', sans-serif";
+const FONT_BODY = "700 54px 'PlusJakartaSans', sans-serif";
+
+/* ============================================================
    TIMING
    ============================================================ */
-const TITLE_PRE_HOLD = 0.3;   // judul statis penuh (thumbnail)
-const TITLE_WIPE     = 0.8;   // durasi wipe
-const TITLE_STATIC   = 2.0;   // setelah wipe, judul penuh lagi
-
-const BODY_FADE_IN   = 0.3;
-const BODY_WIPE      = 0.4;
+const TITLE_PRE_HOLD = 0.3;
+const TITLE_WIPE = 0.8;
+const TITLE_STATIC = 2.0;
+const BODY_FADE_IN = 0.3;
+const BODY_WIPE = 0.4;
 const HIGHLIGHT_LINE_DUR = 0.8;
 const PAGE_GAP = 0.6;
-
-// Kecepatan baca kira-kira 3 kata / detik (180 kata per menit)
 const READING_WORDS_PER_SEC = 3.0;
 
 function setStatus(t) {
@@ -446,7 +475,6 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
     const visible = wInside * progress;
 
     ctx.fillStyle = highlightBg;
-    // disesuaikan untuk font 54px
     ctx.fillRect(x + wBefore - 4, y - 42, visible + 8, 54);
   }
 
@@ -490,10 +518,10 @@ function drawWrappedRichParagraph(text, x, yStart, maxWidth, lineGap, normal, hi
 }
 
 /* ============================================================
-   BACKGROUND (MAGENTA)
+   BACKGROUND
    ============================================================ */
 function drawBaseBackground() {
-  ctx.fillStyle = '#ff00ff'; // MAGENTA
+  ctx.fillStyle = '#808080';
   ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 }
 
@@ -509,22 +537,18 @@ function rebuildTitleLayout() {
   const title = titleEl.value.trim();
   const subtitle = subtitleEl.value.trim();
 
-  const upperFont    = "700 34px 'PlusJakartaCustom'";
-  const titleFont    = "700 90px 'DMSerifCustomBold'";
-  const subtitleFont = "700 34px 'PlusJakartaCustom'";
-
   let upperLines = [];
   let titleLines = [];
   let subtitleLines = [];
 
   if (upper) {
-    upperLines = wrapText(upper, textWidth, upperFont);
+    upperLines = wrapText(upper, textWidth, FONT_UPPER);
   }
   if (title) {
-    titleLines = wrapText(title, textWidth, titleFont);
+    titleLines = wrapText(title, textWidth, FONT_TITLE);
   }
   if (subtitle) {
-    subtitleLines = wrapText(subtitle, textWidth, subtitleFont);
+    subtitleLines = wrapText(subtitle, textWidth, FONT_SUBTITLE);
   }
 
   titleLayout = {
@@ -557,7 +581,7 @@ function rebuildTitleTexture() {
   let y = LOGICAL_HEIGHT - 700;
 
   if (upperLines.length > 0) {
-    titleCtx.font = "700 34px 'PlusJakartaCustom'";
+    titleCtx.font = FONT_UPPER;
     for (const line of upperLines) {
       titleCtx.fillText(line, marginLeft, y);
       y += 36;
@@ -566,7 +590,7 @@ function rebuildTitleTexture() {
   }
 
   if (titleLines.length > 0) {
-    titleCtx.font = "700 90px 'DMSerifCustomBold'";
+    titleCtx.font = FONT_TITLE;
     for (const line of titleLines) {
       titleCtx.fillText(line, marginLeft, y);
       y += 90;
@@ -575,7 +599,7 @@ function rebuildTitleTexture() {
   }
 
   if (subtitleLines.length > 0) {
-    titleCtx.font = "700 34px 'PlusJakartaCustom'";
+    titleCtx.font = FONT_SUBTITLE;
     for (const line of subtitleLines) {
       titleCtx.fillText(line, marginLeft, y);
       y += 36;
@@ -586,19 +610,18 @@ function rebuildTitleTexture() {
 }
 
 /* ============================================================
-   TITLE SCENE (WIPE TANPA clip() BERAT)
+   TITLE SCENE
    ============================================================ */
 function drawTitleScene(t) {
   drawBaseBackground();
 
   const marginLeft = titleLayout.marginLeft;
-  const textWidth  = titleLayout.textWidth;
+  const textWidth = titleLayout.textWidth;
 
   if (!titleTextureReady || !titleCanvas) {
     return;
   }
 
-  // fase statis penuh (thumbnail)
   if (t < TITLE_PRE_HOLD) {
     ctx.drawImage(titleCanvas, 0, 0);
     return;
@@ -606,32 +629,25 @@ function drawTitleScene(t) {
 
   const localT = t - TITLE_PRE_HOLD;
 
-  // fase wipe kiri→kanan
   if (localT < TITLE_WIPE) {
     let raw = localT / TITLE_WIPE;
     if (raw < 0) raw = 0;
     if (raw > 1) raw = 1;
 
-    // sedikit “boost” untuk smoothing di mobile
     if (isMobile) {
       raw = Math.min(1, raw + 0.012);
     }
 
-    // smoothstep easing
     const p = raw * raw * (3 - 2 * raw);
     const clipWidth = marginLeft + textWidth * p;
 
-    // gambar judul penuh dulu
     ctx.drawImage(titleCanvas, 0, 0);
-
-    // kemudian tutup sisi kanan dengan background (MAGENTA)
-    ctx.fillStyle = '#ff00ff';
+    ctx.fillStyle = '#808080';
     ctx.fillRect(clipWidth, 0, LOGICAL_WIDTH - clipWidth, LOGICAL_HEIGHT);
 
     return;
   }
 
-  // setelah wipe selesai: tampil penuh lagi
   ctx.drawImage(titleCanvas, 0, 0);
 }
 
@@ -646,11 +662,10 @@ function fixOrphans(line) {
 }
 
 /* ============================================================
-   ESTIMASI BARIS (UNTUK ANCHOR & DURASI)
+   ESTIMASI BARIS
    ============================================================ */
 function estimateLinesForParagraph(text, maxWidth) {
-  // gunakan font isi 54px saat mengukur
-  ctx.font = "700 54px 'PlusJakartaCustom'";
+  ctx.font = FONT_BODY;
 
   const tokens = tokenizeHighlighted(text);
   let lines = 0;
@@ -674,7 +689,7 @@ function estimateLinesForParagraph(text, maxWidth) {
 }
 
 /* ============================================================
-   BODY PAGES – BARIS KOSONG = HALAMAN BARU
+   BODY PAGES
    ============================================================ */
 function rebuildBodyPages() {
   const raw = bodyEl.value.split("\n");
@@ -697,7 +712,7 @@ function rebuildBodyPages() {
 }
 
 /* ============================================================
-   DRAW BODY PAGE – ANCHOR BAWAH (IDEAL 7 BARIS)
+   DRAW BODY PAGE
    ============================================================ */
 function drawBodyPage(pageIndex, t) {
   drawBaseBackground();
@@ -721,10 +736,8 @@ function drawBodyPage(pageIndex, t) {
   ctx.clip();
 
   ctx.textAlign = 'left';
-  // font isi 54px
-  ctx.font = "700 54px 'PlusJakartaCustom'";
+  ctx.font = FONT_BODY;
 
-  // hitung total "unit baris" setelah wrap
   let totalUnits = 0;
   for (const raw of lines) {
     if (!raw.trim()) continue;
@@ -732,21 +745,15 @@ function drawBodyPage(pageIndex, t) {
   }
 
   const gap = 64;
-
-  // posisi ideal untuk 7 baris (layout lama)
-  const baseY = LOGICAL_HEIGHT - 600; // 1920 - 600 = 1320
+  const baseY = LOGICAL_HEIGHT - 600;
 
   let y;
 
   if (totalUnits <= 7) {
-    // isi pendek: pakai posisi lama apa adanya
     y = baseY;
   } else if (totalUnits <= 12) {
-    // isi 8–12 baris: anchor di bawah
-    // yStart = baseY + (7 - totalUnits) * gap
     y = baseY + (7 - totalUnits) * gap;
   } else {
-    // >12 baris: treat sebagai 12 baris (disarankan pecah halaman)
     y = baseY + (7 - 12) * gap;
   }
 
@@ -776,7 +783,7 @@ function drawBodyPage(pageIndex, t) {
 }
 
 /* ============================================================
-   DURASI – BERDASARKAN WAKTU BACA
+   DURASI
    ============================================================ */
 function recomputeTargetDuration() {
   rebuildTitleLayout();
@@ -784,15 +791,13 @@ function recomputeTargetDuration() {
 
   pageDurations = [];
 
-  // pastikan font sama seperti saat draw isi
-  ctx.font = "700 54px 'PlusJakartaCustom'";
+  ctx.font = FONT_BODY;
 
   for (const page of bodyPages) {
     const joined = page.join(' ').trim();
     const words = joined ? joined.split(/\s+/).length : 0;
 
     if (words === 0) {
-      // halaman kosong / sangat pendek
       pageDurations.push(3);
       continue;
     }
@@ -809,17 +814,13 @@ function recomputeTargetDuration() {
     }
     if (totalUnits === 0) totalUnits = 1;
 
-    // durasi baca murni (detik) ≈ jumlah kata / kata per detik
     const readingSeconds = words / READING_WORDS_PER_SEC;
-
-    // durasi minimum supaya semua highlight sempat animasi
     const animMinimum = totalUnits * HIGHLIGHT_LINE_DUR + 0.5;
 
-    // ambil yang paling besar, lalu clamp
     let d = Math.max(readingSeconds, animMinimum);
 
-    if (d < 3) d = 3;    // minimal 3 detik per halaman
-    if (d > 12) d = 12;  // maksimal ~12 detik per halaman
+    if (d < 3) d = 3;
+    if (d > 12) d = 12;
 
     pageDurations.push(d);
   }
@@ -828,7 +829,6 @@ function recomputeTargetDuration() {
   const contentDurNoGap = pageDurations.reduce((a, b) => a + b, 0);
   const gapDur = PAGE_GAP * (bodyPages.length - 1);
 
-  // TANPA BATAS HP/LAPTOP: semua judul + semua isi + jeda
   targetDuration = titleTotal + 1 + (contentDurNoGap + gapDur);
 }
 
@@ -901,16 +901,27 @@ previewBtn.addEventListener("click", () => {
 });
 
 /* ============================================================
-   MEDIARECORDER FALLBACK (VP9 default -> VP8 fallback)
-   Layout tidak berubah, hanya pemilihan codec.
+   MEDIARECORDER HELPER
    ============================================================ */
-function pickBestRecorder(stream) {
-  const candidates = [
-    "video/webm;codecs=vp9", // default
-    "video/webm;codecs=vp8", // fallback
-    "video/webm",
-    "" // let browser decide
-  ];
+function pickBestRecorder(stream, format) {
+  let candidates;
+  
+  if (format === 'mp4') {
+    candidates = [
+      "video/mp4;codecs=avc1.42E01E",
+      "video/mp4;codecs=avc1.64001E",
+      "video/mp4;codecs=avc1",
+      "video/mp4",
+      ""
+    ];
+  } else {
+    candidates = [
+      "video/webm;codecs=vp9",
+      "video/webm;codecs=vp8",
+      "video/webm",
+      ""
+    ];
+  }
 
   let lastError = null;
 
@@ -919,7 +930,6 @@ function pickBestRecorder(stream) {
 
     try {
       const opts = mime ? { mimeType: mime } : {};
-      // test cepat: beberapa device error saat start()
       const test = new MediaRecorder(stream, opts);
       try {
         test.start(30);
@@ -929,7 +939,6 @@ function pickBestRecorder(stream) {
         continue;
       }
 
-      // buat recorder final
       return { recorder: new MediaRecorder(stream, opts), mime };
     } catch (e) {
       lastError = e;
@@ -937,13 +946,13 @@ function pickBestRecorder(stream) {
     }
   }
 
-  throw lastError || new Error("Tidak ada codec MediaRecorder yang kompatibel.");
+  throw lastError || new Error(`Tidak ada codec yang kompatibel untuk ${format.toUpperCase()}.`);
 }
 
 /* ============================================================
-   RENDER (WEBM)
+   RENDER FUNCTION
    ============================================================ */
-renderBtn.addEventListener("click", () => {
+function startRender(format) {
   if (typeof MediaRecorder === "undefined") {
     alert("MediaRecorder tidak tersedia di perangkat ini.");
     setStatus("MediaRecorder tidak didukung");
@@ -951,12 +960,13 @@ renderBtn.addEventListener("click", () => {
   }
 
   if (typeof canvas.captureStream !== "function") {
-    alert("Browser ini tidak mendukung perekaman langsung dari canvas.\n\nCoba gunakan Chrome/Edge/Brave di Android atau render dari laptop/PC.");
-    setStatus("captureStream tidak didukung di browser ini");
+    alert("Browser ini tidak mendukung perekaman langsung dari canvas.");
+    setStatus("captureStream tidak didukung");
     return;
   }
 
   recomputeTargetDuration();
+  currentFormat = format;
 
   const FPS = isMobile ? 24 : 30;
   const stream = canvas.captureStream(FPS);
@@ -964,12 +974,12 @@ renderBtn.addEventListener("click", () => {
 
   let chosenMime = "";
   try {
-    const res = pickBestRecorder(stream);
+    const res = pickBestRecorder(stream, format);
     mediaRecorder = res.recorder;
     chosenMime = res.mime || "";
   } catch (err) {
-    alert("Perangkat ini tidak mendukung perekaman video WebM (VP9/VP8).\n" + err);
-    setStatus("Format video tidak didukung");
+    alert(`Perangkat tidak mendukung ${format.toUpperCase()}.\n${err}`);
+    setStatus(`Format ${format.toUpperCase()} tidak didukung`);
     return;
   }
 
@@ -979,37 +989,42 @@ renderBtn.addEventListener("click", () => {
 
   mediaRecorder.onstop = () => {
     if (recordedChunks.length === 0) {
-      alert("Tidak ada data rekaman video (fitur mungkin dibatasi di perangkat ini).");
+      alert("Tidak ada data rekaman video.");
       setStatus("Tidak ada data video");
       recording = false;
       return;
     }
 
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const blobType = format === 'mp4' ? "video/mp4" : "video/webm";
+    const extension = format === 'mp4' ? "mp4" : "webm";
+    const blob = new Blob(recordedChunks, { type: blobType });
     const url = URL.createObjectURL(blob);
 
-    let label = "webm";
-    if (chosenMime.includes("vp9")) label = "vp9";
-    else if (chosenMime.includes("vp8")) label = "vp8";
+    let label = format;
+    if (format === 'webm') {
+      if (chosenMime.includes("vp9")) label = "vp9";
+      else if (chosenMime.includes("vp8")) label = "vp8";
+    } else if (format === 'mp4') {
+      if (chosenMime.includes("avc1")) label = "h264";
+    }
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `reels_output_${label}.webm`;
-    a.textContent = `Download video (WEBM ${label.toUpperCase()})`;
-    a.style.color = "#38bdf8";
+    a.download = `reels_output_${label}.${extension}`;
+    a.textContent = `Download video (${format.toUpperCase()} ${label})`;
+    a.style.color = format === 'mp4' ? "#fb923c" : "#38bdf8";
     a.style.textDecoration = "underline";
 
-    downloadEl.innerHTML = "";
     downloadEl.appendChild(a);
 
-    setStatus("render selesai");
+    setStatus(`render ${format.toUpperCase()} selesai`);
     recording = false;
   };
 
   recording = true;
   animating = true;
   animStart = null;
-  setStatus("rendering...");
+  setStatus(`rendering ${format.toUpperCase()}...`);
   requestAnimationFrame(animate);
 
   setTimeout(() => {
@@ -1018,7 +1033,7 @@ renderBtn.addEventListener("click", () => {
       mediaRecorder.start();
     } catch (e) {
       console.error("MediaRecorder.start error:", e);
-      alert("Gagal memulai perekaman di perangkat ini.");
+      alert("Gagal memulai perekaman.");
       setStatus("Gagal memulai perekaman");
       recording = false;
       animating = false;
@@ -1031,7 +1046,13 @@ renderBtn.addEventListener("click", () => {
       mediaRecorder.stop();
     }
   }, targetDuration * 1000 + 500);
-});
+}
+
+/* ============================================================
+   BUTTON HANDLERS
+   ============================================================ */
+renderBtn.addEventListener("click", () => startRender('webm'));
+renderMp4Btn.addEventListener("click", () => startRender('mp4'));
 
 /* ============================================================
    INITIAL FRAME
