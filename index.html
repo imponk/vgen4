@@ -1,19 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Reels</title>
+  <title>Reels - Gray Background</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    /* FONT LOKAL DARI FOLDER */
     @font-face {
       font-family: 'DMSerifDisplay';
-      src: url('fonts/DMSerifDisplay-Regular.woff2') format('truetype');
+      src: url('fonts/DMSerifDisplay-Regular.woff2') format('woff2');
       font-weight: 400;
       font-style: normal;
       font-display: swap;
@@ -21,15 +19,7 @@
 
     @font-face {
       font-family: 'PlusJakartaSans';
-      src: url('fonts/PlusJakartaSans-Bold.woff2') format('truetype');
-      font-weight: 700;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'ProximaNova';
-      src: url('fonts/Proxima Nova Bold.ttf') format('truetype');
+      src: url('fonts/PlusJakartaSans-Bold.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
       font-display: swap;
@@ -40,98 +30,44 @@
       padding: 12px;
       display: flex;
       gap: 16px;
-      background: radial-gradient(circle at top, #020617 0%, #020617 40%, #020617 100%);
+      background: #0f172a;
       color: #e5e7eb;
       font-family: 'PlusJakartaSans', system-ui, sans-serif;
     }
 
     .panel {
-      background: #020617;
+      background: #1e293b;
       padding: 16px 14px;
       border-radius: 14px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+      border: 1px solid #334155;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
     }
 
-    .left {
-      width: 380px;
-      max-width: 100%;
-      flex-shrink: 0;
-    }
+    .left { width: 380px; max-width: 100%; flex-shrink: 0; }
+    .right { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 0; }
 
-    .right {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-width: 0;
-    }
-
-    h2 {
-      margin: 0 0 4px 0;
-      font-size: 18px;
-      letter-spacing: 0.02em;
-    }
-
-    small {
-      font-size: 11px;
-      color: #9ca3af;
-      display: block;
-      margin-bottom: 6px;
-      line-height: 1.4;
-    }
-
-    .field {
-      margin-top: 10px;
-    }
-
-    label {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 4px;
-      color: #cbd5f5;
-    }
+    h2 { margin: 0 0 4px 0; font-size: 18px; }
+    small { font-size: 11px; color: #94a3b8; display: block; margin-bottom: 6px; }
+    .field { margin-top: 10px; }
+    label { font-size: 13px; display: block; margin-bottom: 4px; color: #cbd5e1; }
 
     textarea {
       width: 100%;
       min-height: 56px;
-      background: #020617;
-      color: #e5e7eb;
+      background: #0f172a;
+      color: #e2e8f0;
       border-radius: 10px;
-      border: 1px solid #334155;
+      border: 1px solid #475569;
       padding: 9px 11px;
       font-size: 14px;
       line-height: 1.5;
       resize: vertical;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
     }
+    textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 1px rgba(59,130,246,0.5); }
+    #body { min-height: 130px; }
 
-    #body {
-      min-height: 130px;
-    }
-
-    textarea::placeholder {
-      color: #64748b;
-    }
-
-    textarea:hover {
-      border-color: #4b5563;
-      background: #020819;
-    }
-
-    textarea:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37,99,235,0.8);
-      background: #020819;
-    }
-
-    .btn-row {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .btn-row { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
 
     button {
       padding: 8px 16px;
@@ -143,149 +79,74 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background-color 0.16s ease, transform 0.08s ease, box-shadow 0.16s ease;
+      transition: all 0.16s ease;
     }
 
-    .btn-primary {
-      background: #2563eb;
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(37,99,235,0.5);
-    }
+    .btn-primary { background: #3b82f6; color: #fff; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #334155; color: #e2e8f0; }
+    .btn-secondary:hover { background: #475569; }
+    .btn-mp4 { background: linear-gradient(135deg, #ea580c, #dc2626); color: #fff; }
+    .btn-mp4:hover { filter: brightness(1.05); }
 
-    .btn-primary:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(37,99,235,0.6);
-    }
+    .status { margin-top: 8px; font-size: 12px; color: #94a3b8; }
+    #download { margin-top: 8px; font-size: 13px; }
+    #download a { display: block; margin-bottom: 6px; text-decoration: underline; }
 
-    .btn-secondary {
-      background: #111827;
-      color: #e5e7eb;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.55);
-    }
-
-    .btn-secondary:hover {
-      background: #0f172a;
-    }
-
-    .btn-mp4 {
-      background: linear-gradient(135deg, #ea580c, #dc2626);
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(234,88,12,0.5);
-    }
-
-    .btn-mp4:hover {
-      filter: brightness(1.05);
-      transform: translateY(-1px);
-    }
-
-    .status {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    #download {
-      margin-top: 8px;
-      font-size: 13px;
-    }
-
-    #download a {
-      display: block;
-      margin-bottom: 6px;
-      text-decoration: underline;
-    }
-
+    /* GRAY BACKGROUND */
     canvas {
-      background: #ff3f00;
+      background: #646464;
       border-radius: 18px;
-      border: 1px solid #4b5563;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      border: 1px solid #475569;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
       max-height: 92vh;
       max-width: 100%;
     }
 
-    @media (max-width: 900px) {
-      body {
-        flex-direction: column;
-        padding: 10px;
-      }
-
-      .left,
-      .right {
-        width: 100%;
-      }
-
-      .right {
-        margin-top: 10px;
-      }
-
-      textarea {
-        font-size: 16px;
-      }
-
-      #body {
-        min-height: 180px;
-      }
-
-      .panel {
-        padding: 14px 12px;
-      }
+    .quality-badge {
+      font-size: 10px;
+      background: #059669;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 6px;
     }
 
-    @media (max-width: 500px) {
-      h2 {
-        font-size: 16px;
-      }
-
-      small {
-        font-size: 10px;
-      }
-
-      button {
-        flex: 1 1 auto;
-        justify-content: center;
-      }
+    @media (max-width: 900px) {
+      body { flex-direction: column; padding: 10px; }
+      .left, .right { width: 100%; }
+      .right { margin-top: 10px; }
     }
   </style>
 </head>
 <body>
   <div class="panel left">
-    <h2>Reels – Upper / Judul / Subjudul / Isi</h2>
-    <small>
-      Menggunakan font lokal dari folder medsosJP 2<br>
-      Judul: DM Serif | Body: Plus Jakarta | Upper: Proxima Nova
-    </small>
+    <h2>Reels <span class="quality-badge">60FPS Gray</span></h2>
+    <small>Gray Background + Optimized 60FPS rendering</small>
 
     <div class="field">
-      <label for="upper">Upper (Proxima Nova)</label>
+      <label for="upper">Upper</label>
       <textarea id="upper" placeholder="Contoh: Breaking News"></textarea>
     </div>
-
     <div class="field">
-      <label for="title">Judul (DM Serif Display)</label>
-      <textarea id="title" placeholder="Judul utama yang akan tampil besar di awal video"></textarea>
+      <label for="title">Judul</label>
+      <textarea id="title" placeholder="Judul utama"></textarea>
     </div>
-
     <div class="field">
-      <label for="subtitle">Subjudul (Plus Jakarta Sans)</label>
-      <textarea id="subtitle" placeholder="Subjudul singkat sebagai pelengkap judul"></textarea>
+      <label for="subtitle">Subjudul</label>
+      <textarea id="subtitle" placeholder="Subjudul"></textarea>
     </div>
-
     <div class="field">
-      <label for="body">Isi (Plus Jakarta Sans)</label>
-      <textarea
-        id="body"
-        placeholder="Pisah halaman isi dengan satu baris kosong.&#10;Gunakan [[highlight]] untuk menandai frasa penting."
-      ></textarea>
+      <label for="body">Isi</label>
+      <textarea id="body" placeholder="Gunakan [[highlight]] untuk teks penting. Pisah halaman dengan baris kosong."></textarea>
     </div>
 
     <div class="btn-row">
-      <button class="btn-secondary" id="previewBtn">👁️ Preview</button>
-      <button class="btn-primary" id="renderBtn">🎬 Render (WEBM)</button>
-      <button class="btn-mp4" id="renderMp4Btn">🎬 Render (MP4)</button>
+      <button class="btn-secondary" id="previewBtn">👁 Preview</button>
+      <button class="btn-primary" id="renderBtn">🎬 WEBM</button>
+      <button class="btn-mp4" id="renderMp4Btn">🎬 MP4</button>
     </div>
-    <div class="status" id="status">Status: idle</div>
+    <div class="status" id="status">Ready</div>
     <div id="download"></div>
   </div>
 
@@ -295,27 +156,31 @@
 
 <script>
 /* ============================================================
-   BASE SETUP
+   GRAY BACKGROUND SETUP - ALPHA DISABLED
    ============================================================ */
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+// Alpha false untuk performa
+const ctx = canvas.getContext('2d', { alpha: false });
 
 const ua = navigator.userAgent;
 const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
 
 const LOGICAL_WIDTH = 1080;
 const LOGICAL_HEIGHT = 1920;
-const SCALE = isMobile ? 0.75 : 1.5;
+
+const SCALE = isMobile ? 0.5 : 1.0;
 
 canvas.width  = LOGICAL_WIDTH * SCALE;
 canvas.height = LOGICAL_HEIGHT * SCALE;
 ctx.scale(SCALE, SCALE);
 
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = 'high';
+
 const upperEl = document.getElementById('upper');
 const titleEl = document.getElementById('title');
 const subtitleEl = document.getElementById('subtitle');
 const bodyEl = document.getElementById('body');
-
 const previewBtn = document.getElementById('previewBtn');
 const renderBtn = document.getElementById('renderBtn');
 const renderMp4Btn = document.getElementById('renderMp4Btn');
@@ -328,134 +193,68 @@ let mediaRecorder = null;
 let recordedChunks = [];
 let animStart = null;
 let targetDuration = 12;
-let currentFormat = 'webm';
 
 let bodyPages = [];
 let pageDurations = [];
 
-/* ====== TITLE LAYOUT & OFFSCREEN CANVAS ====== */
-let titleLayout = {
-  marginLeft: 110,
-  marginRight: 140,
-  textWidth: LOGICAL_WIDTH - 110 - 140,
-  upperLines: [],
-  titleLines: [],
-  subtitleLines: []
-};
-
+let titleLayout = { marginLeft: 110, marginRight: 140, textWidth: 830, upperLines: [], titleLines: [], subtitleLines: [] };
 let titleCanvas = null;
 let titleCtx = null;
 let titleTextureReady = false;
+let fontsLoaded = false;
 
-/* ============================================================
-   FONT CONFIG
-   ============================================================ */
 const FONT_UPPER = "700 34px 'PlusJakartaSans', sans-serif";
 const FONT_TITLE = "400 90px 'DMSerifDisplay', serif";
 const FONT_SUBTITLE = "700 34px 'PlusJakartaSans', sans-serif";
 const FONT_BODY = "700 54px 'PlusJakartaSans', sans-serif";
 
-/* ============================================================
-   TIMING
-   ============================================================ */
-const TITLE_PRE_HOLD = 0.3;
-const TITLE_WIPE = 0.8;
+const TITLE_PRE_HOLD = 0.5;
+const TITLE_WIPE = 1.0;
 const TITLE_STATIC = 2.0;
-const BODY_FADE_IN = 0.3;
-const BODY_WIPE = 0.4;
-const HIGHLIGHT_LINE_DUR = 0.8;
-const PAGE_GAP = 0.6;
+const BODY_FADE_IN = 0.4;
+const BODY_WIPE = 0.5;
+const HIGHLIGHT_LINE_DUR = 1.0;
+const PAGE_GAP = 0.4;
 const READING_WORDS_PER_SEC = 3.0;
 
-function setStatus(t) {
-  statusEl.textContent = 'Status: ' + t;
+function setStatus(t) { statusEl.textContent = t; }
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-/* ============================================================
-   HELPER: FORMAT TIMESTAMP
-   ============================================================ */
-function getTimestamp() {
-  const now = new Date();
-  const day = String(now.getDate()).padStart(2, '0');
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const year = now.getFullYear();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `${day}-${month}-${year}-${hours}-${minutes}-${seconds}`;
-}
-
-/* ============================================================
-   TEXT WRAP / TOKENS
-   ============================================================ */
 function wrapText(text, maxWidth, fontSpec) {
   if (fontSpec) ctx.font = fontSpec;
-
   const paragraphs = text.split(/\r?\n/);
   const lines = [];
-
   for (const para of paragraphs) {
     const trimmed = para.trim();
-    if (!trimmed) {
-      lines.push('');
-      continue;
-    }
-
+    if (!trimmed) { lines.push(''); continue; }
     const words = trimmed.split(/\s+/);
     let line = words[0];
-
     for (let i = 1; i < words.length; i++) {
       const word = words[i];
       const testLine = line + ' ' + word;
-      if (ctx.measureText(testLine).width > maxWidth) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = testLine;
-      }
+      if (ctx.measureText(testLine).width > maxWidth) { lines.push(line); line = word; }
+      else line = testLine;
     }
     lines.push(line);
   }
-
   return lines;
 }
 
 function tokenizeHighlighted(text) {
-  let tokens = [];
-  let buf = '';
-  let hi = false;
-  let i = 0;
-
-  function flush() {
-    if (buf.length > 0) {
-      tokens.push({ text: buf, highlight: hi });
-      buf = '';
-    }
-  }
-
+  let tokens = [], buf = '', hi = false, i = 0;
+  function flush() { if (buf) { tokens.push({ text: buf, highlight: hi }); buf = ''; }}
   while (i < text.length) {
-    if (!hi && text.startsWith('[[', i)) {
-      flush();
-      hi = true;
-      i += 2;
-    } else if (hi && text.startsWith(']]', i)) {
-      flush();
-      hi = false;
-      i += 2;
-    } else {
-      const ch = text[i];
-      buf += ch;
-      if (ch === ' ') flush();
-      i++;
-    }
+    if (!hi && text.slice(i, i+2) === '[[') { flush(); hi = true; i += 2; }
+    else if (hi && text.slice(i, i+2) === ']]') { flush(); hi = false; i += 2; }
+    else { buf += text[i++]; if (text[i-1] === ' ') flush(); }
   }
   flush();
   return tokens;
 }
 
-/* ============================================================
-   HIGHLIGHT ISI
-   ============================================================ */
 function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
   if (progress <= 0) {
     ctx.fillStyle = normalColor;
@@ -465,10 +264,7 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
   if (progress > 1) progress = 1;
 
   const full = tokens.map(t => t.text).join('');
-
-  let first = null;
-  let last = null;
-  let index = 0;
+  let first = null, last = null, index = 0;
 
   for (const t of tokens) {
     const len = t.text.length;
@@ -482,10 +278,9 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
   if (first !== null) {
     const before = full.slice(0, first);
     const inside = full.slice(first, last);
-
-    const wBefore = ctx.measureText(before).width;
+    const wBefore = before ? ctx.measureText(before).width : 0;
     const wInside = ctx.measureText(inside).width;
-    const visible = wInside * progress;
+    const visible = wInside * easeInOutCubic(progress);
 
     ctx.fillStyle = highlightBg;
     ctx.fillRect(x + wBefore - 4, y - 42, visible + 8, 54);
@@ -497,82 +292,63 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
 
 function drawWrappedRichParagraph(text, x, yStart, maxWidth, lineGap, normal, highlightBg, indexStart, time) {
   const tokens = tokenizeHighlighted(text);
-  let lines = [];
-  let curTokens = [];
-  let curText = '';
+  let lines = [], curTokens = [], curText = '';
 
   for (const tok of tokens) {
     const test = curText + tok.text;
-    if (curText && ctx.measureText(test).width > maxWidth) {
-      lines.push(curTokens);
-      curTokens = [tok];
-      curText = tok.text;
-    } else {
-      curTokens.push(tok);
-      curText = test;
-    }
+    if (curText && ctx.measureText(test).width > maxWidth) { lines.push(curTokens); curTokens = [tok]; curText = tok.text; }
+    else { curTokens.push(tok); curText = test; }
   }
   if (curTokens.length) lines.push(curTokens);
 
-  let y = yStart;
-  let id = indexStart;
-
+  let y = yStart, id = indexStart;
   for (const lineTokens of lines) {
     const startT = id * HIGHLIGHT_LINE_DUR;
     const rel = (time - startT) / HIGHLIGHT_LINE_DUR;
     const p = Math.max(0, Math.min(rel, 1));
-
     drawLineFromTokens(lineTokens, x, y, normal, highlightBg, p);
     y += lineGap;
     id++;
   }
-
   return { y, linesUsed: lines.length };
 }
 
 /* ============================================================
-   BACKGROUND - ORANGE
+   GRAY BACKGROUND - #646464
    ============================================================ */
+const BG_COLOR = '#646464';
+
 function drawBaseBackground() {
-  ctx.fillStyle = '#ff3f00';
+  ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 }
 
 /* ============================================================
-   TITLE LAYOUT & OFFSCREEN RENDER
+   FILENAME FORMAT: reels_ddmmyymenitdetik
+   ============================================================ */
+function getFilenameTimestamp() {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = String(now.getFullYear()).slice(-2); // 2 digit year
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return `${day}${month}${year}${minutes}${seconds}`;
+}
+
+/* ============================================================
+   TITLE RENDER
    ============================================================ */
 function rebuildTitleLayout() {
-  const marginLeft = 110;
-  const marginRight = 140;
-  const textWidth = LOGICAL_WIDTH - marginLeft - marginRight;
+  const marginLeft = 110, marginRight = 140, textWidth = LOGICAL_WIDTH - marginLeft - marginRight;
+  const upper = upperEl.value.trim(), title = titleEl.value.trim(), subtitle = subtitleEl.value.trim();
 
-  const upper = upperEl.value.trim();
-  const title = titleEl.value.trim();
-  const subtitle = subtitleEl.value.trim();
+  let upperLines = [], titleLines = [], subtitleLines = [];
+  if (upper) upperLines = wrapText(upper, textWidth, FONT_UPPER);
+  if (title) titleLines = wrapText(title, textWidth, FONT_TITLE);
+  if (subtitle) subtitleLines = wrapText(subtitle, textWidth, FONT_SUBTITLE);
 
-  let upperLines = [];
-  let titleLines = [];
-  let subtitleLines = [];
-
-  if (upper) {
-    upperLines = wrapText(upper, textWidth, FONT_UPPER);
-  }
-  if (title) {
-    titleLines = wrapText(title, textWidth, FONT_TITLE);
-  }
-  if (subtitle) {
-    subtitleLines = wrapText(subtitle, textWidth, FONT_SUBTITLE);
-  }
-
-  titleLayout = {
-    marginLeft,
-    marginRight,
-    textWidth,
-    upperLines,
-    titleLines,
-    subtitleLines
-  };
-
+  titleLayout = { marginLeft, marginRight, textWidth, upperLines, titleLines, subtitleLines };
   rebuildTitleTexture();
 }
 
@@ -580,165 +356,99 @@ function rebuildTitleTexture() {
   titleCanvas = document.createElement('canvas');
   titleCanvas.width = LOGICAL_WIDTH;
   titleCanvas.height = LOGICAL_HEIGHT;
-  titleCtx = titleCanvas.getContext('2d');
+  titleCtx = titleCanvas.getContext('2d', { alpha: false });
 
-  titleCtx.clearRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+  // Fill dengan gray background
+  titleCtx.fillStyle = BG_COLOR;
+  titleCtx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+  
   titleCtx.fillStyle = '#ffffff';
   titleCtx.textAlign = 'left';
 
   const marginLeft = titleLayout.marginLeft;
-  const upperLines = titleLayout.upperLines;
-  const titleLines = titleLayout.titleLines;
-  const subtitleLines = titleLayout.subtitleLines;
-
   let y = LOGICAL_HEIGHT - 700;
 
-  if (upperLines.length > 0) {
+  if (titleLayout.upperLines.length > 0) {
     titleCtx.font = FONT_UPPER;
-    for (const line of upperLines) {
-      titleCtx.fillText(line, marginLeft, y);
-      y += 36;
-    }
+    for (const line of titleLayout.upperLines) { titleCtx.fillText(line, marginLeft, y); y += 36; }
     y += 70;
   }
 
-  if (titleLines.length > 0) {
+  if (titleLayout.titleLines.length > 0) {
     titleCtx.font = FONT_TITLE;
-    for (const line of titleLines) {
-      titleCtx.fillText(line, marginLeft, y);
-      y += 90;
-    }
+    for (const line of titleLayout.titleLines) { titleCtx.fillText(line, marginLeft, y); y += 90; }
     y -= 20;
   }
 
-  if (subtitleLines.length > 0) {
+  if (titleLayout.subtitleLines.length > 0) {
     titleCtx.font = FONT_SUBTITLE;
-    for (const line of subtitleLines) {
-      titleCtx.fillText(line, marginLeft, y);
-      y += 36;
-    }
+    for (const line of titleLayout.subtitleLines) { titleCtx.fillText(line, marginLeft, y); y += 36; }
   }
 
   titleTextureReady = true;
 }
 
-/* ============================================================
-   TITLE SCENE
-   ============================================================ */
 function drawTitleScene(t) {
   drawBaseBackground();
+  const marginLeft = titleLayout.marginLeft, textWidth = titleLayout.textWidth;
+  if (!titleTextureReady || !titleCanvas) return;
 
-  const marginLeft = titleLayout.marginLeft;
-  const textWidth = titleLayout.textWidth;
-
-  if (!titleTextureReady || !titleCanvas) {
-    return;
-  }
-
-  if (t < TITLE_PRE_HOLD) {
-    ctx.drawImage(titleCanvas, 0, 0);
-    return;
-  }
+  if (t < TITLE_PRE_HOLD) { ctx.drawImage(titleCanvas, 0, 0); return; }
 
   const localT = t - TITLE_PRE_HOLD;
-
   if (localT < TITLE_WIPE) {
-    let raw = localT / TITLE_WIPE;
-    if (raw < 0) raw = 0;
-    if (raw > 1) raw = 1;
-
-    if (isMobile) {
-      raw = Math.min(1, raw + 0.012);
-    }
-
-    const p = raw * raw * (3 - 2 * raw);
+    const raw = Math.max(0, Math.min(1, localT / TITLE_WIPE));
+    const p = easeInOutCubic(raw);
     const clipWidth = marginLeft + textWidth * p;
 
     ctx.drawImage(titleCanvas, 0, 0);
-    ctx.fillStyle = '#ff3f00';
+    // Fill dengan gray untuk wipe effect
+    ctx.fillStyle = BG_COLOR;
     ctx.fillRect(clipWidth, 0, LOGICAL_WIDTH - clipWidth, LOGICAL_HEIGHT);
-
     return;
   }
 
   ctx.drawImage(titleCanvas, 0, 0);
 }
 
-/* ============================================================
-   ORPHAN FIX
-   ============================================================ */
 function fixOrphans(line) {
-  line = line.replace(/\b(ke|di)\s+(?=\S)/gi, (m, p) => p + '\u00A0');
-  line = line.replace(/\b(terima)\s+(kasih)\b/gi, 'terima\u00A0kasih');
-  line = line.replace(/\b(Jawa)\s+(Pos)\b/gi, 'Jawa\u00A0Pos');
-  return line;
+  return line.replace(/\b(ke|di)\s+(?=\S)/gi, '$1\u00A0')
+             .replace(/\b(terima)\s+(kasih)\b/gi, 'terima\u00A0kasih')
+             .replace(/\b(Jawa)\s+(Pos)\b/gi, 'Jawa\u00A0Pos');
 }
 
-/* ============================================================
-   ESTIMASI BARIS
-   ============================================================ */
 function estimateLinesForParagraph(text, maxWidth) {
   ctx.font = FONT_BODY;
-
   const tokens = tokenizeHighlighted(text);
-  let lines = 0;
-  let curTokens = [];
-  let curText = '';
-
+  let lines = 0, curTokens = [], curText = '';
   for (const tok of tokens) {
     const test = curText + tok.text;
-    if (curText && ctx.measureText(test).width > maxWidth) {
-      lines++;
-      curTokens = [tok];
-      curText = tok.text;
-    } else {
-      curTokens.push(tok);
-      curText = test;
-    }
+    if (curText && ctx.measureText(test).width > maxWidth) { lines++; curTokens = [tok]; curText = tok.text; }
+    else { curTokens.push(tok); curText = test; }
   }
   if (curTokens.length) lines++;
-  if (lines === 0) lines = 1;
-  return lines;
+  return lines || 1;
 }
 
-/* ============================================================
-   BODY PAGES
-   ============================================================ */
 function rebuildBodyPages() {
   const raw = bodyEl.value.split("\n");
-  bodyPages = [];
-  let cur = [];
-
+  bodyPages = []; let cur = [];
   for (const line of raw) {
     const tr = line.trimEnd();
-    if (!tr.trim()) {
-      if (cur.length > 0) {
-        bodyPages.push(cur.slice());
-        cur = [];
-      }
-    } else {
-      cur.push(fixOrphans(tr));
-    }
+    if (!tr.trim()) { if (cur.length) { bodyPages.push(cur); cur = []; } }
+    else cur.push(fixOrphans(tr));
   }
-  if (cur.length > 0) bodyPages.push(cur);
-  if (bodyPages.length === 0) bodyPages = [[]];
+  if (cur.length) bodyPages.push(cur);
+  if (!bodyPages.length) bodyPages = [[]];
 }
 
-/* ============================================================
-   DRAW BODY PAGE
-   ============================================================ */
 function drawBodyPage(pageIndex, t) {
   drawBaseBackground();
-
   const lines = bodyPages[pageIndex] || [];
-  const W = LOGICAL_WIDTH;
-  const marginLeft = 110;
-  const marginRight = 140;
-  const maxWidth = W - marginLeft - marginRight;
+  const marginLeft = 110, maxWidth = 830;
 
   let alpha = 1;
   if (t < BODY_FADE_IN) alpha = t / BODY_FADE_IN;
-
   let wipe = 1;
   if (t < BODY_WIPE) wipe = t / BODY_WIPE;
 
@@ -752,140 +462,71 @@ function drawBodyPage(pageIndex, t) {
   ctx.font = FONT_BODY;
 
   let totalUnits = 0;
-  for (const raw of lines) {
-    if (!raw.trim()) continue;
-    totalUnits += estimateLinesForParagraph(raw, maxWidth);
-  }
+  for (const raw of lines) { if (raw.trim()) totalUnits += estimateLinesForParagraph(raw, maxWidth); }
 
-  const gap = 64;
-  const baseY = LOGICAL_HEIGHT - 600;
-
-  let y;
-
-  if (totalUnits <= 7) {
-    y = baseY;
-  } else if (totalUnits <= 12) {
-    y = baseY + (7 - totalUnits) * gap;
-  } else {
-    y = baseY + (7 - 12) * gap;
-  }
+  const gap = 64, baseY = LOGICAL_HEIGHT - 600;
+  let y = totalUnits <= 7 ? baseY : (totalUnits <= 12 ? baseY + (7 - totalUnits) * gap : baseY + (7 - 12) * gap);
 
   let idx = 0;
-
   for (const raw of lines) {
-    if (!raw.trim()) {
-      y += gap * 0.6;
-      continue;
-    }
-    const res = drawWrappedRichParagraph(
-      raw,
-      marginLeft,
-      y,
-      maxWidth,
-      gap,
-      "#fff",
-      "#0088d8",
-      idx,
-      t
-    );
+    if (!raw.trim()) { y += gap * 0.6; continue; }
+    const res = drawWrappedRichParagraph(raw, marginLeft, y, maxWidth, gap, "#fff", "#0088d8", idx, t);
     y = res.y;
     idx += res.linesUsed;
   }
-
   ctx.restore();
 }
 
-/* ============================================================
-   DURASI
-   ============================================================ */
 function recomputeTargetDuration() {
   rebuildTitleLayout();
   rebuildBodyPages();
-
   pageDurations = [];
-
   ctx.font = FONT_BODY;
 
   for (const page of bodyPages) {
     const joined = page.join(' ').trim();
     const words = joined ? joined.split(/\s+/).length : 0;
-
-    if (words === 0) {
-      pageDurations.push(3);
-      continue;
-    }
-
-    const W = LOGICAL_WIDTH;
-    const marginLeft = 110;
-    const marginRight = 140;
-    const maxWidth = W - marginLeft - marginRight;
+    if (!words) { pageDurations.push(3); continue; }
 
     let totalUnits = 0;
-    for (const raw of page) {
-      if (!raw.trim()) continue;
-      totalUnits += estimateLinesForParagraph(raw, maxWidth);
-    }
-    if (totalUnits === 0) totalUnits = 1;
+    for (const raw of page) { if (raw.trim()) totalUnits += estimateLinesForParagraph(raw, 830); }
+    if (!totalUnits) totalUnits = 1;
 
     const readingSeconds = words / READING_WORDS_PER_SEC;
     const animMinimum = totalUnits * HIGHLIGHT_LINE_DUR + 0.5;
-
     let d = Math.max(readingSeconds, animMinimum);
-
-    if (d < 3) d = 3;
-    if (d > 12) d = 12;
-
+    d = Math.max(3, Math.min(12, d));
     pageDurations.push(d);
   }
 
   const titleTotal = TITLE_PRE_HOLD + TITLE_WIPE + TITLE_STATIC;
   const contentDurNoGap = pageDurations.reduce((a, b) => a + b, 0);
-  const gapDur = PAGE_GAP * (bodyPages.length - 1);
-
-  targetDuration = titleTotal + 1 + (contentDurNoGap + gapDur);
+  targetDuration = titleTotal + 1 + contentDurNoGap + PAGE_GAP * (bodyPages.length - 1);
 }
 
-/* ============================================================
-   FRAME SELECTOR
-   ============================================================ */
 function drawFrame(globalT) {
   const titleTotal = TITLE_PRE_HOLD + TITLE_WIPE + TITLE_STATIC;
   const afterTitleGap = titleTotal + 1;
 
-  if (globalT <= titleTotal) {
-    drawTitleScene(globalT);
-    return;
-  }
-
-  if (globalT <= afterTitleGap) {
-    drawBaseBackground();
-    return;
-  }
+  if (globalT <= titleTotal) { drawTitleScene(globalT); return; }
+  if (globalT <= afterTitleGap) { drawBaseBackground(); return; }
 
   const tBody = globalT - afterTitleGap;
   let acc = 0;
-
   for (let i = 0; i < bodyPages.length; i++) {
     const d = pageDurations[i];
-    if (tBody < acc + d) {
-      drawBodyPage(i, tBody - acc);
-      return;
-    }
-    if (tBody < acc + d + PAGE_GAP) {
-      drawBaseBackground();
-      return;
-    }
+    if (tBody < acc + d) { drawBodyPage(i, tBody - acc); return; }
+    if (tBody < acc + d + PAGE_GAP) { drawBaseBackground(); return; }
     acc += d + PAGE_GAP;
   }
-
-  const lastIndex = bodyPages.length - 1;
-  const lastDur = pageDurations[lastIndex] || 1;
-  drawBodyPage(lastIndex, lastDur);
+  drawBodyPage(bodyPages.length - 1, pageDurations[bodyPages.length - 1] || 1);
 }
 
 /* ============================================================
-   ANIM LOOP
+   SMOOTH ANIMATION LOOP
    ============================================================ */
+let animationId = null;
+
 function animate(ts) {
   if (!animating && !recording) return;
   if (!animStart) animStart = ts;
@@ -894,187 +535,174 @@ function animate(ts) {
   drawFrame(Math.min(elapsed, targetDuration));
 
   if (elapsed < targetDuration) {
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
   } else if (!recording) {
     animating = false;
-    setStatus("preview selesai");
+    setStatus("Preview selesai");
   }
+}
+
+function stopAnimation() {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+  animating = false;
 }
 
 /* ============================================================
    PREVIEW
    ============================================================ */
 previewBtn.addEventListener("click", () => {
+  if (!fontsLoaded) {
+    setStatus("Menunggu font loading...");
+    loadFonts().then(() => { startPreview(); });
+    return;
+  }
+  startPreview();
+});
+
+function startPreview() {
+  stopAnimation();
   recomputeTargetDuration();
   animStart = null;
   animating = true;
   recording = false;
-  setStatus("preview");
-  requestAnimationFrame(animate);
-});
+  setStatus("Preview 60FPS...");
+  animationId = requestAnimationFrame(animate);
+}
 
 /* ============================================================
-   MEDIARECORDER HELPER
+   FONT LOADING
+   ============================================================ */
+async function loadFonts() {
+  if (fontsLoaded) return;
+
+  try {
+    if (document.fonts) {
+      await document.fonts.ready;
+      const testFonts = [
+        "700 12px 'PlusJakartaSans'",
+        "400 12px 'DMSerifDisplay'"
+      ];
+      for (const font of testFonts) {
+        ctx.font = font;
+        ctx.measureText('test');
+      }
+    }
+    fontsLoaded = true;
+    rebuildTitleLayout();
+    drawFrame(0);
+    setStatus("Font loaded - Ready");
+  } catch (e) {
+    console.warn("Font loading issue:", e);
+    fontsLoaded = true;
+  }
+}
+
+/* ============================================================
+   MEDIARECORDER - WEBM & MP4 SUPPORT
    ============================================================ */
 function pickBestRecorder(stream, format) {
-  let candidates;
-  
-  if (format === 'mp4') {
-    candidates = [
-      "video/mp4;codecs=avc1.42E01E",
-      "video/mp4;codecs=avc1.64001E",
-      "video/mp4;codecs=avc1",
-      "video/mp4",
-      ""
-    ];
-  } else {
-    candidates = [
-      "video/webm;codecs=vp9",
-      "video/webm;codecs=vp8",
-      "video/webm",
-      ""
-    ];
-  }
-
-  let lastError = null;
+  const candidates = format === 'mp4'
+    ? ["video/mp4;codecs=avc1.42E01E", "video/mp4;codecs=avc1.64001E", "video/mp4;codecs=avc1", "video/mp4", ""]
+    : ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", ""];
 
   for (const mime of candidates) {
     if (mime && !MediaRecorder.isTypeSupported(mime)) continue;
-
     try {
-      const opts = mime ? { mimeType: mime } : {};
-      const test = new MediaRecorder(stream, opts);
-      try {
-        test.start(30);
-        test.stop();
-      } catch (e) {
-        lastError = e;
-        continue;
-      }
-
+      const opts = mime ? { mimeType: mime, videoBitsPerSecond: 8000000 } : { videoBitsPerSecond: 8000000 };
       return { recorder: new MediaRecorder(stream, opts), mime };
-    } catch (e) {
-      lastError = e;
-      continue;
-    }
+    } catch (e) { continue; }
   }
-
-  throw lastError || new Error(`Tidak ada codec yang kompatibel untuk ${format.toUpperCase()}.`);
+  throw new Error("No compatible codec");
 }
 
-/* ============================================================
-   RENDER FUNCTION
-   ============================================================ */
 function startRender(format) {
-  if (typeof MediaRecorder === "undefined") {
-    alert("MediaRecorder tidak tersedia di perangkat ini.");
-    setStatus("MediaRecorder tidak didukung");
+  if (!fontsLoaded) {
+    setStatus("Menunggu font...");
+    loadFonts().then(() => doRender(format));
+    return;
+  }
+  doRender(format);
+}
+
+function doRender(format) {
+  if (!MediaRecorder || !canvas.captureStream) {
+    alert("Browser tidak mendukung perekaman");
     return;
   }
 
-  if (typeof canvas.captureStream !== "function") {
-    alert("Browser ini tidak mendukung perekaman langsung dari canvas.");
-    setStatus("captureStream tidak didukung");
-    return;
-  }
-
+  stopAnimation();
   recomputeTargetDuration();
-  currentFormat = format;
 
-  const FPS = isMobile ? 24 : 30;
+  const FPS = 60;
   const stream = canvas.captureStream(FPS);
   recordedChunks = [];
 
-  let chosenMime = "";
   try {
     const res = pickBestRecorder(stream, format);
     mediaRecorder = res.recorder;
-    chosenMime = res.mime || "";
+
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = () => finishRender(format, res.mime);
+
+    recording = true;
+    animating = true;
+    animStart = null;
+    setStatus(`Rendering ${format.toUpperCase()} 60FPS...`);
+
+    setTimeout(() => {
+      if (mediaRecorder) mediaRecorder.start(16);
+      animationId = requestAnimationFrame(animate);
+    }, 100);
+
+    setTimeout(() => {
+      if (recording && mediaRecorder?.state === "recording") {
+        mediaRecorder.stop();
+      }
+    }, targetDuration * 1000 + 300);
+
   } catch (err) {
-    alert(`Perangkat tidak mendukung ${format.toUpperCase()}.\n${err}`);
-    setStatus(`Format ${format.toUpperCase()} tidak didukung`);
+    alert("Gagal memulai recording: " + err.message);
+    setStatus("Error");
+  }
+}
+
+function finishRender(format, mime) {
+  recording = false;
+  if (!recordedChunks.length) {
+    setStatus("Tidak ada data");
     return;
   }
 
-  mediaRecorder.ondataavailable = (e) => {
-    if (e.data.size > 0) recordedChunks.push(e.data);
-  };
+  const blobType = format === 'mp4' ? "video/mp4" : "video/webm";
+  const ext = format === 'mp4' ? "mp4" : "webm";
+  const blob = new Blob(recordedChunks, { type: blobType });
+  const url = URL.createObjectURL(blob);
 
-  mediaRecorder.onstop = () => {
-    if (recordedChunks.length === 0) {
-      alert("Tidak ada data rekaman video.");
-      setStatus("Tidak ada data video");
-      recording = false;
-      return;
-    }
+  // Format: reels_ddmmyymenitdetik.ext
+  const timestamp = getFilenameTimestamp();
+  const filename = `reels_${timestamp}.${ext}`;
 
-    const blobType = format === 'mp4' ? "video/mp4" : "video/webm";
-    const extension = format === 'mp4' ? "mp4" : "webm";
-    const blob = new Blob(recordedChunks, { type: blobType });
-    const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.textContent = `Download ${filename}`;
+  a.style.color = format === 'mp4' ? "#fb923c" : "#38bdf8";
 
-    // Generate timestamp filename
-    const timestamp = getTimestamp();
-    const filename = `reels_${timestamp}.${extension}`;
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.textContent = `Download ${filename}`;
-    a.style.color = format === 'mp4' ? "#fb923c" : "#38bdf8";
-    a.style.textDecoration = "underline";
-
-    downloadEl.appendChild(a);
-
-    setStatus(`render ${format.toUpperCase()} selesai - ${filename}`);
-    recording = false;
-  };
-
-  recording = true;
-  animating = true;
-  animStart = null;
-  setStatus(`rendering ${format.toUpperCase()}...`);
-  requestAnimationFrame(animate);
-
-  setTimeout(() => {
-    if (!mediaRecorder) return;
-    try {
-      mediaRecorder.start();
-    } catch (e) {
-      console.error("MediaRecorder.start error:", e);
-      alert("Gagal memulai perekaman.");
-      setStatus("Gagal memulai perekaman");
-      recording = false;
-      animating = false;
-      return;
-    }
-  }, 120);
-
-  setTimeout(() => {
-    if (recording && mediaRecorder && mediaRecorder.state === "recording") {
-      mediaRecorder.stop();
-    }
-  }, targetDuration * 1000 + 500);
+  downloadEl.appendChild(a);
+  setStatus(`${format.toUpperCase()} selesai - ${filename}`);
 }
 
-/* ============================================================
-   BUTTON HANDLERS
-   ============================================================ */
 renderBtn.addEventListener("click", () => startRender('webm'));
 renderMp4Btn.addEventListener("click", () => startRender('mp4'));
 
-/* ============================================================
-   INITIAL FRAME
-   ============================================================ */
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => {
-    rebuildTitleLayout();
-    drawFrame(0);
-  });
-} else {
+// Init
+loadFonts().then(() => {
   rebuildTitleLayout();
   drawFrame(0);
-}
+});
 </script>
 </body>
 </html>
