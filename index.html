@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Reels</title>
+  <title>Reels - Gray Background</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -44,6 +44,7 @@
 
     .left { width: 380px; max-width: 100%; flex-shrink: 0; }
     .right { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 0; }
+
     h2 { margin: 0 0 4px 0; font-size: 18px; }
     small { font-size: 11px; color: #94a3b8; display: block; margin-bottom: 6px; }
     .field { margin-top: 10px; }
@@ -66,6 +67,7 @@
     #body { min-height: 130px; }
 
     .btn-row { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+
     button {
       padding: 8px 16px;
       border-radius: 999px;
@@ -78,6 +80,7 @@
       gap: 6px;
       transition: all 0.16s ease;
     }
+
     .btn-primary { background: #3b82f6; color: #fff; }
     .btn-primary:hover { background: #2563eb; }
     .btn-secondary { background: #334155; color: #e2e8f0; }
@@ -89,13 +92,23 @@
     #download { margin-top: 8px; font-size: 13px; }
     #download a { display: block; margin-bottom: 6px; text-decoration: underline; }
 
+    /* GRAY DARK BACKGROUND */
     canvas {
-      background: #00ff00;
+      background: #1a1a1a;
       border-radius: 18px;
       border: 1px solid #475569;
       box-shadow: 0 20px 40px rgba(0,0,0,0.6);
       max-height: 92vh;
       max-width: 100%;
+    }
+
+    .quality-badge {
+      font-size: 10px;
+      background: #059669;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 6px;
     }
 
     @media (max-width: 900px) {
@@ -107,8 +120,8 @@
 </head>
 <body>
   <div class="panel left">
-    <h2>Reels <span style="font-size:10px;background:#059669;color:white;padding:2px 8px;border-radius:12px;margin-left:6px;">Green Screen</span></h2>
-    <small>Background #00ff00 untuk Chroma Key</small>
+    <h2>Reels <span class="quality-badge">60FPS Gray</span></h2>
+    <small>Dark Gray Background + Optimized 60FPS rendering</small>
 
     <div class="field">
       <label for="upper">Upper</label>
@@ -124,9 +137,7 @@
     </div>
     <div class="field">
       <label for="body">Isi</label>
-      <textarea id="body" placeholder="Gunakan [[highlight]] untuk teks penting.
-
-Pisah halaman dengan baris kosong."></textarea>
+      <textarea id="body" placeholder="Gunakan [[highlight]] untuk teks penting. Pisah halaman dengan baris kosong."></textarea>
     </div>
 
     <div class="btn-row">
@@ -144,16 +155,18 @@ Pisah halaman dengan baris kosong."></textarea>
 
 <script>
 /* ============================================================
-   SETUP - GREEN SCREEN #00ff00
+   GRAY BACKGROUND SETUP - ALPHA DISABLED
    ============================================================ */
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+// Alpha false untuk performa
+const ctx = canvas.getContext('2d', { alpha: false });
 
 const ua = navigator.userAgent;
 const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
 
 const LOGICAL_WIDTH = 1080;
 const LOGICAL_HEIGHT = 1920;
+
 const SCALE = isMobile ? 0.5 : 1.0;
 
 canvas.width  = LOGICAL_WIDTH * SCALE;
@@ -173,11 +186,21 @@ const renderMp4Btn = document.getElementById('renderMp4Btn');
 const statusEl = document.getElementById('status');
 const downloadEl = document.getElementById('download');
 
-let animating = false, recording = false, mediaRecorder = null;
-let recordedChunks = [], animStart = null, targetDuration = 12;
-let bodyPages = [], pageDurations = [];
+let animating = false;
+let recording = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let animStart = null;
+let targetDuration = 12;
+
+let bodyPages = [];
+let pageDurations = [];
+
 let titleLayout = { marginLeft: 110, marginRight: 140, textWidth: 830, upperLines: [], titleLines: [], subtitleLines: [] };
-let titleCanvas = null, titleCtx = null, titleTextureReady = false, fontsLoaded = false;
+let titleCanvas = null;
+let titleCtx = null;
+let titleTextureReady = false;
+let fontsLoaded = false;
 
 const FONT_UPPER = "700 34px 'PlusJakartaSans', sans-serif";
 const FONT_TITLE = "400 90px 'DMSerifDisplay', serif";
@@ -197,14 +220,6 @@ function setStatus(t) { statusEl.textContent = t; }
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-/* ============================================================
-   BACKGROUND - SELALU #00ff00
-   ============================================================ */
-function fillGreenBackground() {
-  ctx.fillStyle = '#00ff00';
-  ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 }
 
 function wrapText(text, maxWidth, fontSpec) {
@@ -246,10 +261,10 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
     return;
   }
   if (progress > 1) progress = 1;
-  
+
   const full = tokens.map(t => t.text).join('');
   let first = null, last = null, index = 0;
-  
+
   for (const t of tokens) {
     const len = t.text.length;
     if (t.highlight && t.text.trim().length > 0) {
@@ -265,7 +280,7 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
     const wBefore = before ? ctx.measureText(before).width : 0;
     const wInside = ctx.measureText(inside).width;
     const visible = wInside * easeInOutCubic(progress);
-    
+
     ctx.fillStyle = highlightBg;
     ctx.fillRect(x + wBefore - 4, y - 42, visible + 8, 54);
   }
@@ -277,7 +292,7 @@ function drawLineFromTokens(tokens, x, y, normalColor, highlightBg, progress) {
 function drawWrappedRichParagraph(text, x, yStart, maxWidth, lineGap, normal, highlightBg, indexStart, time) {
   const tokens = tokenizeHighlighted(text);
   let lines = [], curTokens = [], curText = '';
-  
+
   for (const tok of tokens) {
     const test = curText + tok.text;
     if (curText && ctx.measureText(test).width > maxWidth) { lines.push(curTokens); curTokens = [tok]; curText = tok.text; }
@@ -298,12 +313,22 @@ function drawWrappedRichParagraph(text, x, yStart, maxWidth, lineGap, normal, hi
 }
 
 /* ============================================================
-   TITLE - SELALU DARI GREEN BACKGROUND
+   GRAY DARK BACKGROUND - #1a1a1a
+   ============================================================ */
+const BG_COLOR = '#1a1a1a';
+
+function drawBaseBackground() {
+  ctx.fillStyle = BG_COLOR;
+  ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+}
+
+/* ============================================================
+   TITLE RENDER
    ============================================================ */
 function rebuildTitleLayout() {
   const marginLeft = 110, marginRight = 140, textWidth = LOGICAL_WIDTH - marginLeft - marginRight;
   const upper = upperEl.value.trim(), title = titleEl.value.trim(), subtitle = subtitleEl.value.trim();
-  
+
   let upperLines = [], titleLines = [], subtitleLines = [];
   if (upper) upperLines = wrapText(upper, textWidth, FONT_UPPER);
   if (title) titleLines = wrapText(title, textWidth, FONT_TITLE);
@@ -317,10 +342,10 @@ function rebuildTitleTexture() {
   titleCanvas = document.createElement('canvas');
   titleCanvas.width = LOGICAL_WIDTH;
   titleCanvas.height = LOGICAL_HEIGHT;
-  titleCtx = titleCanvas.getContext('2d');
-  
-  // ISI BACKGROUND GREEN DI TITLE CANVAS JUGA
-  titleCtx.fillStyle = '#00ff00';
+  titleCtx = titleCanvas.getContext('2d', { alpha: false });
+
+  // Fill dengan gray background
+  titleCtx.fillStyle = BG_COLOR;
   titleCtx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
   
   titleCtx.fillStyle = '#ffffff';
@@ -350,25 +375,21 @@ function rebuildTitleTexture() {
 }
 
 function drawTitleScene(t) {
+  drawBaseBackground();
   const marginLeft = titleLayout.marginLeft, textWidth = titleLayout.textWidth;
-  if (!titleTextureReady || !titleCanvas) { fillGreenBackground(); return; }
+  if (!titleTextureReady || !titleCanvas) return;
 
-  // SELALU MULAI DARI GREEN PENUH
-  fillGreenBackground();
-
-  if (t < TITLE_PRE_HOLD) { 
-    ctx.drawImage(titleCanvas, 0, 0); 
-    return; 
-  }
+  if (t < TITLE_PRE_HOLD) { ctx.drawImage(titleCanvas, 0, 0); return; }
 
   const localT = t - TITLE_PRE_HOLD;
   if (localT < TITLE_WIPE) {
     const raw = Math.max(0, Math.min(1, localT / TITLE_WIPE));
     const p = easeInOutCubic(raw);
     const clipWidth = marginLeft + textWidth * p;
-    
+
     ctx.drawImage(titleCanvas, 0, 0);
-    ctx.fillStyle = '#00ff00';
+    // Fill dengan gray untuk wipe effect
+    ctx.fillStyle = BG_COLOR;
     ctx.fillRect(clipWidth, 0, LOGICAL_WIDTH - clipWidth, LOGICAL_HEIGHT);
     return;
   }
@@ -378,8 +399,8 @@ function drawTitleScene(t) {
 
 function fixOrphans(line) {
   return line.replace(/\b(ke|di)\s+(?=\S)/gi, '$1\u00A0')
-               .replace(/\b(terima)\s+(kasih)\b/gi, 'terima\u00A0kasih')
-               .replace(/\b(Jawa)\s+(Pos)\b/gi, 'Jawa\u00A0Pos');
+             .replace(/\b(terima)\s+(kasih)\b/gi, 'terima\u00A0kasih')
+             .replace(/\b(Jawa)\s+(Pos)\b/gi, 'Jawa\u00A0Pos');
 }
 
 function estimateLinesForParagraph(text, maxWidth) {
@@ -408,7 +429,7 @@ function rebuildBodyPages() {
 }
 
 function drawBodyPage(pageIndex, t) {
-  fillGreenBackground();
+  drawBaseBackground();
   const lines = bodyPages[pageIndex] || [];
   const marginLeft = 110, maxWidth = 830;
 
@@ -474,21 +495,21 @@ function drawFrame(globalT) {
   const afterTitleGap = titleTotal + 1;
 
   if (globalT <= titleTotal) { drawTitleScene(globalT); return; }
-  if (globalT <= afterTitleGap) { fillGreenBackground(); return; }
+  if (globalT <= afterTitleGap) { drawBaseBackground(); return; }
 
   const tBody = globalT - afterTitleGap;
   let acc = 0;
   for (let i = 0; i < bodyPages.length; i++) {
     const d = pageDurations[i];
     if (tBody < acc + d) { drawBodyPage(i, tBody - acc); return; }
-    if (tBody < acc + d + PAGE_GAP) { fillGreenBackground(); return; }
+    if (tBody < acc + d + PAGE_GAP) { drawBaseBackground(); return; }
     acc += d + PAGE_GAP;
   }
   drawBodyPage(bodyPages.length - 1, pageDurations[bodyPages.length - 1] || 1);
 }
 
 /* ============================================================
-   ANIMATION LOOP
+   SMOOTH ANIMATION LOOP
    ============================================================ */
 let animationId = null;
 
@@ -516,12 +537,12 @@ function stopAnimation() {
 }
 
 /* ============================================================
-   PREVIEW & RENDER
+   PREVIEW
    ============================================================ */
 previewBtn.addEventListener("click", () => {
   if (!fontsLoaded) {
-    setStatus("Loading fonts...");
-    loadFonts().then(() => startPreview());
+    setStatus("Menunggu font loading...");
+    loadFonts().then(() => { startPreview(); });
     return;
   }
   startPreview();
@@ -533,25 +554,43 @@ function startPreview() {
   animStart = null;
   animating = true;
   recording = false;
-  setStatus("Preview...");
+  setStatus("Preview 60FPS...");
   animationId = requestAnimationFrame(animate);
 }
 
+/* ============================================================
+   FONT LOADING
+   ============================================================ */
 async function loadFonts() {
   if (fontsLoaded) return;
+
   try {
-    if (document.fonts) await document.fonts.ready;
+    if (document.fonts) {
+      await document.fonts.ready;
+      const testFonts = [
+        "700 12px 'PlusJakartaSans'",
+        "400 12px 'DMSerifDisplay'"
+      ];
+      for (const font of testFonts) {
+        ctx.font = font;
+        ctx.measureText('test');
+      }
+    }
     fontsLoaded = true;
     rebuildTitleLayout();
     drawFrame(0);
-    setStatus("Ready");
+    setStatus("Font loaded - Ready");
   } catch (e) {
+    console.warn("Font loading issue:", e);
     fontsLoaded = true;
   }
 }
 
+/* ============================================================
+   MEDIARECORDER - WEBM & MP4 SUPPORT
+   ============================================================ */
 function pickBestRecorder(stream, format) {
-  const candidates = format === 'mp4' 
+  const candidates = format === 'mp4'
     ? ["video/mp4;codecs=avc1.42E01E", "video/mp4;codecs=avc1.64001E", "video/mp4;codecs=avc1", "video/mp4", ""]
     : ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", ""];
 
@@ -562,12 +601,12 @@ function pickBestRecorder(stream, format) {
       return { recorder: new MediaRecorder(stream, opts), mime };
     } catch (e) { continue; }
   }
-  throw new Error("No codec");
+  throw new Error("No compatible codec");
 }
 
 function startRender(format) {
   if (!fontsLoaded) {
-    setStatus("Loading fonts...");
+    setStatus("Menunggu font...");
     loadFonts().then(() => doRender(format));
     return;
   }
@@ -576,13 +615,13 @@ function startRender(format) {
 
 function doRender(format) {
   if (!MediaRecorder || !canvas.captureStream) {
-    alert("Browser tidak support");
+    alert("Browser tidak mendukung perekaman");
     return;
   }
 
   stopAnimation();
   recomputeTargetDuration();
-  
+
   const FPS = 60;
   const stream = canvas.captureStream(FPS);
   recordedChunks = [];
@@ -590,28 +629,28 @@ function doRender(format) {
   try {
     const res = pickBestRecorder(stream, format);
     mediaRecorder = res.recorder;
-    
+
     mediaRecorder.ondataavailable = (e) => { if (e.data.size) recordedChunks.push(e.data); };
     mediaRecorder.onstop = () => finishRender(format, res.mime);
-    
+
     recording = true;
     animating = true;
     animStart = null;
-    setStatus(`Rendering ${format.toUpperCase()}...`);
-    
+    setStatus(`Rendering ${format.toUpperCase()} 60FPS...`);
+
     setTimeout(() => {
       if (mediaRecorder) mediaRecorder.start(16);
       animationId = requestAnimationFrame(animate);
     }, 100);
-    
+
     setTimeout(() => {
       if (recording && mediaRecorder?.state === "recording") {
         mediaRecorder.stop();
       }
     }, targetDuration * 1000 + 300);
-    
+
   } catch (err) {
-    alert("Error: " + err.message);
+    alert("Gagal memulai recording: " + err.message);
     setStatus("Error");
   }
 }
@@ -630,20 +669,19 @@ function finishRender(format, mime) {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = `reels_${format}.${ext}`;
-  a.textContent = `Download ${format.toUpperCase()}`;
+  a.download = `reels_gray_60fps_${format}.${ext}`;
+  a.textContent = `Download ${format.toUpperCase()} (60FPS)`;
   a.style.color = format === 'mp4' ? "#fb923c" : "#38bdf8";
-  
+
   downloadEl.appendChild(a);
-  setStatus(`${format.toUpperCase()} selesai`);
+  setStatus(`${format.toUpperCase()} 60FPS selesai`);
 }
 
 renderBtn.addEventListener("click", () => startRender('webm'));
 renderMp4Btn.addEventListener("click", () => startRender('mp4'));
 
-// Init dengan green background
+// Init
 loadFonts().then(() => {
-  fillGreenBackground();
   rebuildTitleLayout();
   drawFrame(0);
 });
