@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -356,11 +357,23 @@ const FONT_SUBTITLE = "700 34px 'PlusJakartaSans', sans-serif";
 const FONT_BODY = "700 54px 'PlusJakartaSans', sans-serif";
 
 /* ============================================================
-   TIMING
+   TIMING - DURASI JUDUL DINAMIS
    ============================================================ */
 const TITLE_PRE_HOLD = 0.3;
 const TITLE_WIPE = 0.8;
-const TITLE_STATIC = 2.0;
+
+// Durasi baca per baris (detik)
+const UPPER_SEC_PER_LINE = 0.4;
+const TITLE_SEC_PER_LINE = 0.6;
+const SUBTITLE_SEC_PER_LINE = 0.4;
+
+// Minimum dan maksimum durasi static judul
+const TITLE_STATIC_MIN = 2.0;
+const TITLE_STATIC_MAX = 6.0;
+
+// Variabel untuk durasi judul yang dihitung dinamis
+let titleStaticDuration = TITLE_STATIC_MIN;
+
 const BODY_FADE_IN = 0.3;
 const BODY_WIPE = 0.4;
 const HIGHLIGHT_LINE_DUR = 0.8;
@@ -572,6 +585,16 @@ function rebuildTitleLayout() {
     titleLines,
     subtitleLines
   };
+
+  // Hitung durasi static judul berdasarkan panjang
+  const upperDuration = upperLines.length * UPPER_SEC_PER_LINE;
+  const titleDuration = titleLines.length * TITLE_SEC_PER_LINE;
+  const subtitleDuration = subtitleLines.length * SUBTITLE_SEC_PER_LINE;
+  
+  titleStaticDuration = Math.max(
+    TITLE_STATIC_MIN,
+    Math.min(TITLE_STATIC_MAX, upperDuration + titleDuration + subtitleDuration)
+  );
 
   rebuildTitleTexture();
 }
@@ -838,7 +861,8 @@ function recomputeTargetDuration() {
     pageDurations.push(d);
   }
 
-  const titleTotal = TITLE_PRE_HOLD + TITLE_WIPE + TITLE_STATIC;
+  // Gunakan titleStaticDuration yang dihitung dinamis di rebuildTitleLayout()
+  const titleTotal = TITLE_PRE_HOLD + TITLE_WIPE + titleStaticDuration;
   const contentDurNoGap = pageDurations.reduce((a, b) => a + b, 0);
   const gapDur = PAGE_GAP * (bodyPages.length - 1);
 
@@ -849,7 +873,8 @@ function recomputeTargetDuration() {
    FRAME SELECTOR
    ============================================================ */
 function drawFrame(globalT) {
-  const titleTotal = TITLE_PRE_HOLD + TITLE_WIPE + TITLE_STATIC;
+  // Gunakan titleStaticDuration yang dihitung dinamis
+  const titleTotal = TITLE_PRE_HOLD + TITLE_WIPE + titleStaticDuration;
   const afterTitleGap = titleTotal + 1;
 
   if (globalT <= titleTotal) {
@@ -909,7 +934,7 @@ previewBtn.addEventListener("click", () => {
   animStart = null;
   animating = true;
   recording = false;
-  setStatus("preview");
+  setStatus("preview (durasi: " + targetDuration.toFixed(1) + "s)");
   requestAnimationFrame(animate);
 });
 
@@ -918,7 +943,7 @@ previewBtn.addEventListener("click", () => {
    ============================================================ */
 function pickBestRecorder(stream, format) {
   let candidates;
-  
+
   if (format === 'mp4') {
     candidates = [
       "video/mp4;codecs=avc1.42E01E",
@@ -1026,14 +1051,14 @@ function startRender(format) {
 
     downloadEl.appendChild(a);
 
-    setStatus(`render ${format.toUpperCase()} selesai - ${filename}`);
+    setStatus(`render ${format.toUpperCase()} selesai - ${filename} (${targetDuration.toFixed(1)}s)`);
     recording = false;
   };
 
   recording = true;
   animating = true;
   animStart = null;
-  setStatus(`rendering ${format.toUpperCase()}...`);
+  setStatus(`rendering ${format.toUpperCase()}... (${targetDuration.toFixed(1)}s)`);
   requestAnimationFrame(animate);
 
   setTimeout(() => {
