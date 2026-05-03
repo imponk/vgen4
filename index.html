@@ -198,7 +198,7 @@
     }
 
     canvas {
-      background: #646464;
+      background: #808080;
       border-radius: 18px;
       border: 1px solid #4b5563;
       box-shadow: 0 20px 40px rgba(0,0,0,0.8);
@@ -547,7 +547,7 @@ function drawWrappedRichParagraph(text, x, yStart, maxWidth, lineGap, normal, hi
    BACKGROUND - ORANGE
    ============================================================ */
 function drawBaseBackground() {
-  ctx.fillStyle = '#646464';
+  ctx.fillStyle = '#808080';
   ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 }
 
@@ -678,7 +678,7 @@ function drawTitleScene(t) {
     const clipWidth = marginLeft + textWidth * p;
 
     ctx.drawImage(titleCanvas, 0, 0);
-    ctx.fillStyle = '#646464';
+    ctx.fillStyle = '#808080';
     ctx.fillRect(clipWidth, 0, LOGICAL_WIDTH - clipWidth, LOGICAL_HEIGHT);
 
     return;
